@@ -1,0 +1,25 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local runtime (never source)
+.matematic/
+*.log
+.mcp.json
+
+# Live API probe scratch (raw dumps - not part of the package)
+_probe/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Note: tests/fixtures/* ARE committed - public CC0 ejustice.just.fgov.be data needed for
+# offline tests.

@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "be-eli-mcp": {
+      "command": "be-eli-mcp",
+      "env": {
+        "BE_ELI_BASE_URL": "https://www.ejustice.just.fgov.be",
+        "BE_ELI_CACHE_DIR": "~/.matematic/cache/be-eli",
+        "BE_ELI_AUDIT_DIR": "~/.matematic/audit"
+      }
+    }
+  }
+}
