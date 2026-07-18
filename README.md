@@ -50,6 +50,26 @@ py -3.13 -m venv .venv
 # or: python -m pip install -e ".[dev]"                  # POSIX
 ```
 
+
+### Windows 11 ze Smart App Control
+
+Smart App Control blokuje niepodpisane pliki wykonywalne, a `uvx.exe`, `pip.exe`
+i generowany przy instalacji `be-eli-mcp.exe` podpisane nie sa. `python.exe`
+z python.org jest podpisany przez Python Software Foundation, wiec uruchomienie
+przez modul omija blokade:
+
+```bash
+python -m pip install be-eli-mcp
+python -m be_eli_mcp
+```
+
+```json
+{ "mcpServers": { "be-eli-mcp": { "command": "python", "args": ["-m", "be_eli_mcp"] } } }
+```
+
+Nie wylaczaj Smart App Control, zeby to obejsc - wylaczenia nie da sie cofnac
+bez ponownej instalacji systemu.
+
 ## Tests
 
 ```bash
