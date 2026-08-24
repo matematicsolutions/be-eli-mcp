@@ -26,6 +26,7 @@ carries a native `eli_uri`, a `human_readable_citation` and a `source_url`.
 | `be_get_act(doc_type, year, month, day, numac)` | Metadata for an act by its ELI coordinates. `doc_type` is one of `loi`, `decret`, `ordonnance`, `arrete`, `constitution`. Returns the native `eli_uri`, title, source authority, publication date, entry-into-force date, table of contents, and the citation contract. |
 | `be_get_text(doc_type, year, month, day, numac, language="fr")` | The verbatim consolidated text ("Texte"/"Tekst" section) in `fr` (default), `nl` or `de`. |
 | `be_list_year(doc_type, year)` | Browse a year's listing for one `doc_type`, to discover NUMAC coordinates. Titles in this listing are best-effort (may be `None`); call `be_get_act` for the authoritative title. |
+| `be_coverage()` | Declare what this connector covers, when each family was captured, and - explicitly - what it does NOT cover. Every gap carries a fallback. |
 
 There is **no free-text search**: ejustice.just.fgov.be exposes no keyword-search API. Discover
 acts by ELI coordinates (from a citation you already hold) or by browsing `be_list_year`.
