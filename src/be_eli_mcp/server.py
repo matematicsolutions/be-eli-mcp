@@ -36,6 +36,7 @@ This MCP server exposes Belgian legislation via Moniteur Belge / Belgisch Staats
 
 ## Hard constraints
 
+- **Do not answer past the edge of this corpus** - when a search comes back empty, or the question touches material this connector does not carry, call `be_coverage` and relay what it says is missing. Absence here is not absence in the law.
 - **No free-text search** - ejustice.just.fgov.be exposes no keyword-search API. Discovery is by ELI coordinates (from a citation you already have) or by browsing `be_list_year` for a given type/year. Relay the `dataset_note`.
 - **ELI is native** - the `eli_uri` is the real ejustice.just.fgov.be ELI URL for the requested coordinates; do not invent or alter it. A coordinate with no matching NUMAC returns HTTP 200 with an empty page (verified live) - this is surfaced as `not_found`, not silently returned as an empty `Act`.
 - **Belgium is trilingual** - French is used as the primary `human_readable_citation` (LDH convention), but Dutch (Belgisch Staatsblad) and German texts exist for most acts; use `language` in `be_get_text` to fetch them.
