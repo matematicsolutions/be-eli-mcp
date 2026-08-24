@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "be-eli-mcp"
-version = "0.2.1"
+version = "0.2.2"
 description = "MCP server for Belgian legislation via Moniteur Belge / Belgisch Staatsblad (ejustice.just.fgov.be) — ELI-coordinate metadata and full text with verifiable citations."
 readme = "README.md"
 license = { text = "Apache-2.0" }
