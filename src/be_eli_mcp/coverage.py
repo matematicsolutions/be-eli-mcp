@@ -64,7 +64,9 @@ AS_OF_NOTE = (
 
 _FAMILIES: list[dict] = [{'name': 'Federal legislation', 'tool': 'be_get_act / be_get_text / be_list_year'}]
 
-_GAPS: list[dict] = [{'id': 'BE-001', 'family': 'Federal legislation', 'missing': 'There is no free-text search. Documents are reachable only by ELI coordinate (type/year/month/day/numac) or by browsing a year.', 'fallback': 'Use the Moniteur Belge web search to find a numac, then query here.'}, {'id': 'BE-002', 'family': 'Federal legislation', 'missing': 'Legal force on a given date is not evaluated. Text is returned as the source publishes it; this connector does not decide whether a provision is in force.', 'fallback': 'Check the validity or consolidation dates on the source record itself.'}]
+_GAPS: list[dict] = [{'id': 'BE-001', 'family': 'Federal legislation', 'missing': 'There is no free-text search. Documents are reachable only by ELI coordinate (type/year/month/day/numac) or by browsing a year.', 'fallback': 'Use the Moniteur Belge web search to find a numac, then query here.'}, {'id': 'BE-002', 'family': 'Federal legislation', 'missing': 'Legal force on a given date is not evaluated. Text is returned as the source publishes it; this connector does not decide whether a provision is in force.', 'fallback': 'Check the validity or consolidation dates on the source record itself.'}, {'id': 'BE-003', 'family': 'Federal legislation', 'missing': "The licence status of the source data is not settled here. Third-party catalogs describe "
+                       "Moniteur Belge content as CC0, but this project has not re-verified that against the "
+                       "publisher's own terms page.", 'fallback': "Check ejustice.just.fgov.be's own terms before redistributing; the content is (c) the Belgian federal state."}]
 
 
 def build_coverage() -> Coverage:

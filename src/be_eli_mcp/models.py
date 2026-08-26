@@ -12,7 +12,9 @@ TextVariant = Literal["justel", "moniteur"]
 
 DATASET_NOTE = (
     "Moniteur Belge / Belgisch Staatsblad (ejustice.just.fgov.be) is Belgium's official "
-    "gazette, keyless and CC0-licensed. Legislation is addressed by ELI coordinates "
+    "gazette, keyless. Third-party catalogs describe the data as CC0; this project has NOT "
+    "re-verified that against the source's own terms page, so do not state it as settled. "
+    "Legislation is addressed by ELI coordinates "
     "(type/year/month/day/numac) at /eli/{type}/{yyyy}/{mm}/{dd}/{numac}/justel. There is "
     "no free-text search API - only a year-listing page per legislation type "
     "(/eli/{type}/{year}) for discovery, and get-by-coordinate for full text. Belgium is "
