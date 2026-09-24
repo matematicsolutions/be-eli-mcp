@@ -1,0 +1,749 @@
+{
+  "package_version": "0.2.4",
+  "tools": {
+    "be_coverage": {
+      "descriptor": {
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": true,
+          "readOnlyHint": true
+        },
+        "description": "Declare what this connector covers, how it is sourced, and what it does NOT cover.\n\nCall this before telling a user that the law \"does not contain\" something, and whenever\na search comes back empty: the absence may be a gap in this connector rather than in the\nlaw. Every gap carries a fallback saying where to look instead.\n\nReturns:\n    ``Coverage`` with families, an as-of note, and a non-empty list of known gaps.",
+        "inputSchema": {
+          "additionalProperties": false,
+          "properties": {},
+          "type": "object"
+        },
+        "meta": {
+          "fastmcp": {
+            "tags": []
+          }
+        },
+        "name": "be_coverage",
+        "outputSchema": {
+          "additionalProperties": true,
+          "description": "What this connector covers, how it is sourced, and what it does not cover.",
+          "properties": {
+            "as_of_note": {
+              "description": "States what the dates mean, and what they do not promise.",
+              "type": "string"
+            },
+            "families": {
+              "items": {
+                "additionalProperties": true,
+                "description": "One data family this connector exposes.",
+                "properties": {
+                  "captured_at": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Date this family was last captured (ISO). None when queried live."
+                  },
+                  "live": {
+                    "default": true,
+                    "description": "True when queried live instead of from a snapshot.",
+                    "type": "boolean"
+                  },
+                  "name": {
+                    "description": "Data family, e.g. 'Federal legislation'.",
+                    "type": "string"
+                  },
+                  "source": {
+                    "description": "Official source the data comes from.",
+                    "type": "string"
+                  },
+                  "tool": {
+                    "description": "Tool or tools that reach this family.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "tool",
+                  "source"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "known_gaps": {
+              "description": "Never empty. An empty list would mean 'not checked', not 'no gaps'.",
+              "items": {
+                "additionalProperties": true,
+                "description": "A known, named hole in this connector's coverage - plus the way around it.",
+                "properties": {
+                  "fallback": {
+                    "description": "Where to go instead.",
+                    "type": "string"
+                  },
+                  "family": {
+                    "description": "Which family the gap belongs to.",
+                    "type": "string"
+                  },
+                  "id": {
+                    "description": "Stable gap identifier.",
+                    "type": "string"
+                  },
+                  "missing": {
+                    "description": "What is NOT available through this connector.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "family",
+                  "missing",
+                  "fallback"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "status": {
+              "default": "ok",
+              "enum": [
+                "ok",
+                "degraded",
+                "failed"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "as_of_note"
+          ],
+          "type": "object"
+        }
+      },
+      "sha256": "4b9a99c60961bd12d468469333b6aa56eb8705f9463006cceeadee85a74cedd6"
+    },
+    "be_get_act": {
+      "descriptor": {
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": true,
+          "readOnlyHint": true
+        },
+        "description": "Fetch metadata for a Belgian act by its ELI coordinates.",
+        "inputSchema": {
+          "additionalProperties": false,
+          "properties": {
+            "day": {
+              "description": "publication day, 1-31.",
+              "type": "integer"
+            },
+            "doc_type": {
+              "description": "one of ``loi``, ``decret``, ``ordonnance``, ``arrete``, ``constitution``.",
+              "enum": [
+                "loi",
+                "decret",
+                "ordonnance",
+                "arrete",
+                "constitution"
+              ],
+              "type": "string"
+            },
+            "month": {
+              "description": "publication month, 1-12.",
+              "type": "integer"
+            },
+            "numac": {
+              "description": "the NUMAC identifier (Belgian legislative numbering system), e.g. ``2020040054``.",
+              "type": "string"
+            },
+            "year": {
+              "description": "publication year, e.g. ``2020``.",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "doc_type",
+            "year",
+            "month",
+            "day",
+            "numac"
+          ],
+          "type": "object"
+        },
+        "meta": {
+          "fastmcp": {
+            "tags": []
+          }
+        },
+        "name": "be_get_act",
+        "outputSchema": {
+          "additionalProperties": true,
+          "description": "Result of ``be_get_act`` - metadata for a Belgian legal resource.",
+          "properties": {
+            "dataset_note": {
+              "default": "Moniteur Belge / Belgisch Staatsblad (ejustice.just.fgov.be) is Belgium's official gazette, keyless. Third-party catalogs describe the data as CC0; this project has NOT re-verified that against the source's own terms page, so do not state it as settled. Legislation is addressed by ELI coordinates (type/year/month/day/numac) at /eli/{type}/{yyyy}/{mm}/{dd}/{numac}/justel. There is no free-text search API - only a year-listing page per legislation type (/eli/{type}/{year}) for discovery, and get-by-coordinate for full text. Belgium is trilingual (French/Dutch/German); French is used as the primary human_readable form by LDH convention, but NL and DE renderings exist for most acts.",
+              "type": "string"
+            },
+            "day": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "doc_type": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "loi",
+                    "decret",
+                    "ordonnance",
+                    "arrete",
+                    "constitution"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "dossier_number": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "eli_uri": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "entry_into_force": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "human_readable_citation": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "language": {
+              "default": "fr",
+              "enum": [
+                "fr",
+                "nl",
+                "de"
+              ],
+              "type": "string"
+            },
+            "month": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "numac": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "publication_date": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "source_authority": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "source_url": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "table_of_contents": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "title": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "year": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            }
+          },
+          "type": "object"
+        }
+      },
+      "sha256": "69821390cdb1c9338337ef49de6eb74321653d1b8568c5abf5cfba4c1d16305a"
+    },
+    "be_get_text": {
+      "descriptor": {
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": true,
+          "readOnlyHint": true
+        },
+        "description": "Fetch the verbatim consolidated text of a Belgian act.",
+        "inputSchema": {
+          "additionalProperties": false,
+          "properties": {
+            "day": {
+              "description": "publication day, 1-31.",
+              "type": "integer"
+            },
+            "doc_type": {
+              "description": "one of ``loi``, ``decret``, ``ordonnance``, ``arrete``, ``constitution``.",
+              "enum": [
+                "loi",
+                "decret",
+                "ordonnance",
+                "arrete",
+                "constitution"
+              ],
+              "type": "string"
+            },
+            "language": {
+              "default": "fr",
+              "description": "``fr`` (default), ``nl`` or ``de``.",
+              "enum": [
+                "fr",
+                "nl",
+                "de"
+              ],
+              "type": "string"
+            },
+            "month": {
+              "description": "publication month, 1-12.",
+              "type": "integer"
+            },
+            "numac": {
+              "description": "the NUMAC identifier.",
+              "type": "string"
+            },
+            "year": {
+              "description": "publication year.",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "doc_type",
+            "year",
+            "month",
+            "day",
+            "numac"
+          ],
+          "type": "object"
+        },
+        "meta": {
+          "fastmcp": {
+            "tags": []
+          }
+        },
+        "name": "be_get_text",
+        "outputSchema": {
+          "additionalProperties": true,
+          "description": "Result of ``be_get_text`` - the verbatim text of an act.",
+          "properties": {
+            "byte_size": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "content": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "dataset_note": {
+              "default": "Moniteur Belge / Belgisch Staatsblad (ejustice.just.fgov.be) is Belgium's official gazette, keyless. Third-party catalogs describe the data as CC0; this project has NOT re-verified that against the source's own terms page, so do not state it as settled. Legislation is addressed by ELI coordinates (type/year/month/day/numac) at /eli/{type}/{yyyy}/{mm}/{dd}/{numac}/justel. There is no free-text search API - only a year-listing page per legislation type (/eli/{type}/{year}) for discovery, and get-by-coordinate for full text. Belgium is trilingual (French/Dutch/German); French is used as the primary human_readable form by LDH convention, but NL and DE renderings exist for most acts.",
+              "type": "string"
+            },
+            "day": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "doc_type": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "loi",
+                    "decret",
+                    "ordonnance",
+                    "arrete",
+                    "constitution"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "eli_uri": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "human_readable_citation": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "language": {
+              "default": "fr",
+              "enum": [
+                "fr",
+                "nl",
+                "de"
+              ],
+              "type": "string"
+            },
+            "month": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "numac": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "source_url": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "variant": {
+              "default": "justel",
+              "enum": [
+                "justel",
+                "moniteur"
+              ],
+              "type": "string"
+            },
+            "year": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            }
+          },
+          "type": "object"
+        }
+      },
+      "sha256": "51fabbae73b0d45e89a6af8ee68e2c3b684726a8da72deae33bde4fec5cf8992"
+    },
+    "be_list_year": {
+      "descriptor": {
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": true,
+          "readOnlyHint": true
+        },
+        "description": "Browse a year's listing of a Belgian legislation type, to discover NUMAC coordinates.",
+        "inputSchema": {
+          "additionalProperties": false,
+          "properties": {
+            "doc_type": {
+              "description": "one of ``loi``, ``decret``, ``ordonnance``, ``arrete``, ``constitution``.",
+              "enum": [
+                "loi",
+                "decret",
+                "ordonnance",
+                "arrete",
+                "constitution"
+              ],
+              "type": "string"
+            },
+            "year": {
+              "description": "e.g. ``2020``.",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "doc_type",
+            "year"
+          ],
+          "type": "object"
+        },
+        "meta": {
+          "fastmcp": {
+            "tags": []
+          }
+        },
+        "name": "be_list_year",
+        "outputSchema": {
+          "properties": {
+            "result": {
+              "items": {
+                "additionalProperties": true,
+                "description": "One entry from a year-listing page (``be_list_year``).",
+                "properties": {
+                  "doc_type": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "loi",
+                          "decret",
+                          "ordonnance",
+                          "arrete",
+                          "constitution"
+                        ],
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null
+                  },
+                  "eli_uri": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null
+                  },
+                  "justel_url": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null
+                  },
+                  "moniteur_url": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null
+                  },
+                  "numac": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null
+                  },
+                  "publication_date": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null
+                  },
+                  "source_authority": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null
+                  },
+                  "title": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null
+                  },
+                  "year": {
+                    "anyOf": [
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "result"
+          ],
+          "type": "object",
+          "x-fastmcp-wrap-result": true
+        }
+      },
+      "sha256": "243d3939743476c897062e226c5493e373f57716c8b7c28a32c82097bc7e5099"
+    }
+  },
+  "toolset_sha256": "00d68cf3917e8b74532864c09f65ca797d483edf7a96ef93593d1d40c89a487c"
+}
